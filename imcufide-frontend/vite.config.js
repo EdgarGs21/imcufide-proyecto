@@ -1,7 +1,16 @@
+// vite.config.js
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        ligaFutbol: resolve(__dirname, 'liga-futbol.html'),
+        categoriaJuvenilA: resolve(__dirname, 'categoria-juvenil-a.html'),
+        // --- AÑADE AQUÍ CUALQUIER OTRA PÁGINA HTML QUE CREES ---
+      },
+    },
+  },
 })

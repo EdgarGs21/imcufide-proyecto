@@ -1,18 +1,31 @@
+// src/banners.js
+
+// 1. Importamos cada imagen al principio del archivo.
+//    Esto le permite a Vite encontrarlas y procesarlas correctamente.
+import bannerImg1 from './assets/banner_1.jpg';
+import bannerImg2 from './assets/banner_2.jpg';
+import bannerImg3 from './assets/banner_3.jpg';
+
+// Asegúrate de que los nombres de archivo (banner_1.jpg, etc.)
+// coincidan exactamente con los que tienes en tu carpeta 'src/assets/'.
+
+
+// 2. Ahora, en lugar de texto, usamos las variables que acabamos de crear.
 export const bannersData = [
     {
-        imagen: './src/assets/banner_1.jpg',
+        imagen: bannerImg1, // <-- Cambio clave
         titulo: 'Inscripciones Abiertas para la Liga Municipal de Fútbol',
         subtitulo: 'Categorías infantiles y juveniles. ¡No te quedes fuera!',
-        enlace: '#' // En el futuro, podría ser '/noticia/liga-futbol'
+        enlace: '#'
     },
     {
-        imagen: './src/assets/banner_2.jpg',
+        imagen: bannerImg2, // <-- Cambio clave
         titulo: 'Gran Torneo de Voleibol de Verano 2025',
         subtitulo: 'Participa con tu equipo y compite por la copa municipal.',
         enlace: '#'
     },
     {
-        imagen: './src/assets/banner_3.jpg',
+        imagen: bannerImg3, // <-- Cambio clave
         titulo: 'Clases de Activación Física para Adultos Mayores',
         subtitulo: 'Mantente activo y saludable. Consulta los horarios.',
         enlace: '#'
