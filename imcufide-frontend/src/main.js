@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendarioTabla = document.querySelector('.match-calendar');
     if (calendarioTabla) {
         const cuerpoTabla = calendarioTabla.querySelector('tbody');
-        const urlApiPartidos = 'https://imcufide-api.onrender.com/partidos/publico/';
+        const urlApiPartidos = 'https://imcufide-proyecto.onrender.com/partidos/publico/';
 
         fetch(urlApiPartidos)
             .then(response => {
