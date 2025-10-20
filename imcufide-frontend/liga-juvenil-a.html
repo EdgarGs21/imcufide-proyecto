@@ -5,21 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categoría Juvenil A - Liga de Fútbol IMCUFIDE</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js" defer></script> 
 </head>
 <body>
 
     <header class="main-header">
-        </header>
+        <div class="header-logos">
+            <img src="./src/assets/logo-tenango.png" alt="Logo Tenango del Valle">
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#ligas" class="active">Ligas</a></li>
+                <li><a href="index.html#noticias">Noticias</a></li>
+                <li><a href="#quienes-somos">¿Quiénes somos?</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <main>
         <section class="league-hero" style="background-image: url('./src/assets/banner-juvenil-a.jpg');">
             <div class="league-hero-content">
-                <p>Futbol: Liga "Hoy y Siempre"</p>
+                <p>Futbol: Liga "HOY Y SIEMPRE"</p>
                 <h1>Categoría Juvenil A (15 a 19 años)</h1>
             </div>
         </section>
+
+        <nav class="breadcrumbs">
+            <div class="container">
+                <a href="liga-futbol.html">‹ Volver a las Categorías de Fútbol</a>
+            </div>
+        </nav>
 
         <section class="tabs-section">
             <div class="container">
@@ -32,62 +53,74 @@
 
                 <div class="tabs-content">
                     <div id="tab-1" class="tab-pane active">
-                        <h3>Detalles de la Categoría</h3>
-                        <p>La categoría Juvenil A es el nivel más competitivo de la liga, diseñada para jugadores de 15 a 19 años. Los partidos se juegan los domingos.</p>
-                        <ul>
-                            <li><strong>Requisitos:</strong> Acta de nacimiento, CURP, identificación oficial.</li>
-                            <li><strong>Sede Principal:</strong> Unidad Deportiva Tenango del Valle.</li>
-                            <li><strong>Inscripciones:</strong> Abiertas hasta el 30 de Septiembre.</li>
-                        </ul>
+                        <div class="info-grid">
+                            <article class="info-card">
+                                <div class="info-card-header">
+                                    <img src="./src/assets/icons/trophy.png" alt="Icono de trofeo" class="info-card-icon">
+                                    <h3>Historia de la Liga</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Fundada en 1995, la liga ha crecido hasta incluir más de 50 equipos en 3 divisiones.</p>
+                                    <ul class="custom-list">
+                                        <li class="checkmark">Semillero de talento</li>
+                                        <li class="checkmark">Desarrollo de habilidades</li>
+                                        <li class="checkmark">Fomento del juego limpio</li>
+                                    </ul>
+                                </div>
+                            </article>
+
+                            <article class="info-card">
+                                <div class="info-card-header">
+                                    <img src="./src/assets/icons/rules.png" alt="Icono de reglas" class="info-card-icon">
+                                    <h3>Reglas Clave</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <ul class="custom-list">
+                                        <li class="circle">Basado en reglas estándar de la FIFA.</li>
+                                        <li class="circle">Partidos: 45 minutos por mitad.</li>
+                                        <li class="circle">Sustituciones: Ilimitadas.</li>
+                                        <li class="circle">Énfasis en juego limpio y respeto.</li>
+                                    </ul>
+                                </div>
+                            </article>
+
+                            <article class="info-card">
+                                <div class="info-card-header">
+                                    <img src="./src/assets/icons/structure.png" alt="Icono de estructura" class="info-card-icon">
+                                    <h3>Estructura y Edades</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p><strong>Jugadores</strong><br>Edades: 14 a 18 años</p>
+                                    <p><strong>Divisiones</strong><br>Total: 3 Divisiones</p>
+                                    <ul class="custom-list">
+                                        <li class="star">División 1 (Élite)</li>
+                                        <li class="star">División 2 (Desarrollo)</li>
+                                        <li class="star">División 3 (Jóvenes promesas)</li>
+                                    </ul>
+                                </div>
+                            </article>
+                        </div>
                     </div>
                     <div id="tab-2" class="tab-pane">
                         <h3>Calendario de Partidos</h3>
-                        <table class="match-calendar">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Equipo Local</th>
-                                    <th>Equipo Visitante</th>
-                                    <th>Sede</th>
-                                    <th>Resultado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>21/09/2025</td>
-                                    <td>Real Tenango</td>
-                                    <td>Deportivo Juárez</td>
-                                    <td>Campo 1</td>
-                                    <td>3 - 1</td>
-                                </tr>
-                                <tr>
-                                    <td>21/09/2025</td>
-                                    <td>Atlético San Pedro</td>
-                                    <td>Jaguares IMCUFIDE</td>
-                                    <td>Campo 2</td>
-                                    <td>0 - 2</td>
-                                </tr>
-                                </tbody>
-                        </table>
+                        <p class="section-subtitle" style="margin-bottom: 2rem;">
+                            Revisa los próximos juegos y resultados, filtrados por equipo, jornada o fecha.
+                        </p>
+
+                        <div class="search-bar">
+                            <img src="./src/assets/icons/search.png" alt="Buscar">
+                            <input type="text" placeholder="Buscar por equipo, jornada o fecha...">
+                        </div>
+
+                        <div class="game-list-container">
+                            <h4>Próximos Partidos</h4>
+                            <div class="game-list">
+                                </div>
+                        </div>
                     </div>
                     <div id="tab-3" class="tab-pane">
                         <h3>Equipos Participantes</h3>
-                        <div class="team-roster">
-                            <h4>Real Tenango</h4>
-                            <ul>
-                                <li>Juan Pérez (Capitán)</li>
-                                <li>Carlos Sánchez</li>
-                                <li>Miguel Hernández</li>
-                            </ul>
-                        </div>
-                        <div class="team-roster">
-                            <h4>Jaguares IMCUFIDE</h4>
-                            <ul>
-                                <li>Luis García (Capitán)</li>
-                                <li>Pedro Martínez</li>
-                                <li>Javier Rodríguez</li>
-                            </ul>
-                        </div>
+                        <p>Próximamente...</p>
                     </div>
                     <div id="tab-4" class="tab-pane">
                         <h3>Galería de Fotos</h3>
@@ -99,10 +132,39 @@
     </main>
 
     <footer class="main-footer">
-        </footer>
-
-    <div class="fab-container">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h4><img src="./src/assets/icons/escudo.png" alt="" class="h4-icon"> IMCUFIDE Tenango del Valle</h4>
+                    <p>Fomentando el deporte y la cultura física para construir una comunidad más fuerte.</p>
+                </div>
+                <div class="footer-links">
+                    <h4><img src="./src/assets/icons/enlace.png" alt="" class="h4-icon"> Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#ligas">Ligas</a></li>
+                        <li><a href="index.html#noticias">Noticias</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4><img src="./src/assets/icons/pulgar-arriba.png" alt="" class="h4-icon"> Síguenos</h4>
+                    <ul class="social-list">
+                        <li><a href="#" target="_blank" class="social-link"><img src="./src/assets/icons/facebook.png" alt="Facebook" class="social-icon"><span>Facebook</span></a></li>
+                        <li><a href="#" target="_blank" class="social-link"><img src="./src/assets/icons/instagram.png" alt="Instagram" class="social-icon"><span>Instagram</span></a></li>
+                        <li><a href="#" target="_blank" class="social-link"><img src="./src/assets/icons/x.png" alt="Twitter" class="social-icon"><span>Twitter</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 IMCUFIDE Tenango del Valle. Todos los derechos reservados.</p>
+            </div>
         </div>
+    </footer>
+    <div class="fab-container">
+        <a href="#" class="fab fab-whatsapp">
+            <img src="./src/assets/icons/whatsapp.png" alt="WhatsApp">
+        </a>
+    </div>
 
 </body>
 </html>

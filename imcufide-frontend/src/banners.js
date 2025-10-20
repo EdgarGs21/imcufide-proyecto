@@ -6,10 +6,6 @@ import bannerImg1 from './assets/banner_1.jpg';
 import bannerImg2 from './assets/banner_2.jpg';
 import bannerImg3 from './assets/banner_3.jpg';
 
-// Asegúrate de que los nombres de archivo (banner_1.jpg, etc.)
-// coincidan exactamente con los que tienes en tu carpeta 'src/assets/'.
-
-
 // 2. Ahora, en lugar de texto, usamos las variables que acabamos de crear.
 export const bannersData = [
     {

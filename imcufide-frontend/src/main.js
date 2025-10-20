@@ -5,44 +5,109 @@ import { bannersData } from './banners.js';
 
 // Espera a que todo el contenido de la página se cargue
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- LÓGICA DEL HEADER (Se ejecuta en todas las páginas) ---
+    
+    // --- LÓGICA DEL HEADER (CON OCULTAMIENTO AUTOMÁTICO) ---
     const header = document.querySelector('.main-header');
     if (header) {
+        let lastScrollY = window.scrollY; // Guardamos la posición inicial
+
         const handleScroll = () => {
-            if (window.scrollY > 50) {
-                header.classList.add('header-scrolled');
+            const currentScrollY = window.scrollY;
+
+            // Le damos un pequeño margen (más de 5px) para evitar activaciones accidentales
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                // Si bajamos, escondemos el header
+                header.classList.add('header-hidden');
             } else {
-                header.classList.remove('header-scrolled');
+                // Si subimos, lo mostramos
+                header.classList.remove('header-hidden');
             }
+            // Actualizamos la última posición del scroll
+            lastScrollY = currentScrollY;
         };
+
         window.addEventListener('scroll', handleScroll);
     }
 
-    // --- LÓGICA PARA EL CARRUSEL DEL BANNER (Solo para index.html) ---
-    const bannerContainer = document.getElementById('banner-container');
-    if (bannerContainer && bannersData) {
-        let currentBannerIndex = 0;
-        
-        function showBanner(index) {
-            const banner = bannersData[index];
-            bannerContainer.innerHTML = `
-                <div class="banner-slide" style="background-image: url('${banner.imagen}');">
-                    <div class="banner-content fade-in">
-                        <h1 class="banner-title">${banner.titulo}</h1>
-                        <p class="banner-subtitle">${banner.subtitulo}</p>
-                        <a href="${banner.enlace}" class="btn-banner">Ver más</a>
-                    </div>
-                </div>
-            `;
+// --- LÓGICA PARA EL NUEVO CARRUSEL (CON LOOP INFINITO) ---
+const carouselContainer = document.querySelector('.carousel-container');
+if (carouselContainer && bannersData && bannersData.length > 0) {
+    const track = carouselContainer.querySelector('.carousel-track');
+    const nav = carouselContainer.querySelector('.carousel-nav');
+    
+    // 1. Poblar el carrusel con las imágenes y los puntos
+    bannersData.forEach((banner, index) => {
+        const slide = document.createElement('div');
+        slide.classList.add('carousel-slide');
+        slide.innerHTML = `<img src="${banner.imagen}" alt="${banner.titulo}">`;
+        track.appendChild(slide);
+
+        const dot = document.createElement('button');
+        dot.classList.add('carousel-indicator');
+        if (index === 0) dot.classList.add('active');
+        dot.dataset.index = index;
+        nav.appendChild(dot);
+    });
+
+    // 2. Crear los clones para el loop infinito
+    const firstClone = track.firstElementChild.cloneNode(true);
+    const lastClone = track.lastElementChild.cloneNode(true);
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, track.firstElementChild);
+
+    const slides = Array.from(track.children);
+    const dots = Array.from(nav.children);
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    let currentSlideIndex = 1; // Empezamos en la primera imagen REAL, no en el clon
+
+    // 3. Posición inicial del carrusel
+    track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
+
+    const updateDots = (targetIndex) => {
+        dots.forEach(dot => dot.classList.remove('active'));
+        // Ajustamos el índice para los clones
+        if (targetIndex === 0) {
+            dots[dots.length - 1].classList.add('active');
+        } else if (targetIndex === slides.length - 1) {
+            dots[0].classList.add('active');
+        } else {
+            dots[targetIndex - 1].classList.add('active');
         }
-        function nextBanner() {
-            currentBannerIndex = (currentBannerIndex + 1) % bannersData.length;
-            showBanner(currentBannerIndex);
+    };
+
+    const moveToSlide = () => {
+        track.style.transition = 'transform 0.5s ease-in-out';
+        track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
+        updateDots(currentSlideIndex);
+    };
+
+    // 4. Lógica para el movimiento automático
+    const goToNextSlide = () => {
+        if (currentSlideIndex >= slides.length - 1) return; // Previene múltiples saltos
+        currentSlideIndex++;
+        moveToSlide();
+    };
+
+    // 5. El "Salto Mágico"
+    track.addEventListener('transitionend', () => {
+        if (currentSlideIndex === slides.length - 1) { // Si estamos en el clon del final
+            track.style.transition = 'none'; // Desactivamos la animación
+            currentSlideIndex = 1; // Saltamos a la primera imagen real
+            track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
         }
-        showBanner(currentBannerIndex);
-        setInterval(nextBanner, 5000);
-    }
+    });
+
+    // Lógica de los puntos
+    nav.addEventListener('click', e => {
+        const targetDot = e.target.closest('button');
+        if (!targetDot) return;
+        currentSlideIndex = parseInt(targetDot.dataset.index) + 1; // +1 por el clon inicial
+        moveToSlide();
+    });
+
+    // Iniciar el intervalo automático
+    setInterval(goToNextSlide, 4500);
+}
 
     // --- LÓGICA PARA LAS PESTAÑAS (Tabs) ---
     const tabLinks = document.querySelectorAll('.tab-link');
