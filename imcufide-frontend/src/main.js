@@ -128,44 +128,51 @@ if (carouselContainer && bannersData && bannersData.length > 0) {
     }
 
     // --- LÓGICA PARA CARGAR EL CALENDARIO DE PARTIDOS ---
-    const calendarioTabla = document.querySelector('.match-calendar');
-    if (calendarioTabla) {
-        const cuerpoTabla = calendarioTabla.querySelector('tbody');
-        const urlApiPartidos = 'https://imcufide-proyecto.onrender.com/partidos/publico/';
+const gameList = document.querySelector('.game-list');
+if (gameList) {
+    const urlApiPartidos = 'https://imcufide-proyecto.onrender.com/partidos/publico/';
 
-        fetch(urlApiPartidos)
-            .then(response => {
-                if (!response.ok) throw new Error('Error en la respuesta de la API');
-                return response.json();
-            })
-            .then(partidos => {
-                cuerpoTabla.innerHTML = ''; // Limpiamos la tabla de ejemplo
+    fetch(urlApiPartidos)
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la respuesta de la API');
+            return response.json();
+        })
+        .then(partidos => {
+            gameList.innerHTML = ''; // Limpiamos
 
-                if (partidos.length === 0) {
-                    cuerpoTabla.innerHTML = '<tr><td colspan="5">No hay partidos programados por el momento.</td></tr>';
-                    return;
-                }
+            if (partidos.length === 0) {
+                gameList.innerHTML = '<div class="game-item">No hay partidos programados.</div>';
+                return;
+            }
 
-                partidos.forEach(partido => {
-                    const fila = document.createElement('tr');
-                    const fechaFormateada = new Date(partido.fecha + 'T00:00:00').toLocaleDateString('es-MX', {
-                        day: '2-digit', month: 'long', year: 'numeric'
-                    });
-                    
-                    fila.innerHTML = `
-                        <td>${fechaFormateada}</td>
-                        <td>${partido.equipo_local_nombre}</td>
-                        <td>${partido.equipo_visitante_nombre}</td>
-                        <td>${partido.sede_nombre}</td>
-                        <td>${partido.marcador_local !== null ? partido.marcador_local : '-'} - ${partido.marcador_visitante !== null ? partido.marcador_visitante : '-'}</td>
-                    `;
-                    cuerpoTabla.appendChild(fila);
+            partidos.forEach(partido => {
+                const gameItem = document.createElement('div');
+                gameItem.classList.add('game-item');
+
+                const fecha = new Date(partido.fecha + 'T' + partido.hora).toLocaleDateString('es-MX', {
+                    month: 'long', day: 'numeric', year: 'numeric'
                 });
-            })
-            .catch(error => {
-                console.error('Hubo un problema al obtener los partidos:', error);
-                cuerpoTabla.innerHTML = '<tr><td colspan="5">No se pudo cargar el calendario. Por favor, intente más tarde.</td></tr>';
+                const hora = new Date(partido.fecha + 'T' + partido.hora).toLocaleTimeString('es-MX', {
+                    hour: 'numeric', minute: '2-digit', hour12: true
+                });
+
+                gameItem.innerHTML = `
+                    <div class="game-info">
+                        <strong>${partido.equipo_local_nombre} vs ${partido.equipo_visitante_nombre}</strong>
+                        <p>${partido.sede_nombre}</p>
+                    </div>
+                    <div class="game-time">
+                        <p>${fecha}</p>
+                        <span>${hora}</span>
+                    </div>
+                `;
+                gameList.appendChild(gameItem);
             });
-    }
+        })
+        .catch(error => {
+            console.error('Hubo un problema al obtener los partidos:', error);
+            gameList.innerHTML = '<div class="game-item">No se pudo cargar el calendario.</div>';
+        });
+}
 
 });
