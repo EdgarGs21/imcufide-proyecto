@@ -18,7 +18,7 @@ origins = [
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:5173",
-    "imcufide-proyecto.vercel.app"
+    "https://imcufide-proyecto.vercel.app/"
 ]
 
 app.add_middleware(
