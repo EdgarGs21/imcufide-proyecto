@@ -25,7 +25,7 @@ class CategoriaCreate(CategoriaBase):
 
 class Categoria(CategoriaBase):
     id: int
-    deporte: Deporte
+    deporte: Deporte # Asumiendo que quieres ver el detalle del deporte
     class Config:
         from_attributes = True
 
@@ -41,7 +41,7 @@ class Documento(DocumentoBase):
     id: int
     class Config:
         from_attributes = True
-        
+
 # --- Schemas para Jugador ---
 class JugadorBase(BaseModel):
     nombre: str
@@ -57,9 +57,19 @@ class JugadorCreate(JugadorBase):
 class Jugador(JugadorBase):
     id: int
     documentos: List[Documento] = []
+    class Config:
+        from_attributes = True
+
+# --- INICIO DEL CÓDIGO AÑADIDO (Schema simplificado para plantillas) ---
+class JugadorSimple(BaseModel):
+    id: int
+    nombre: str
+    posicion: Optional[str] = None
+    dorsal: Optional[int] = None
 
     class Config:
         from_attributes = True
+# --- FIN DEL CÓDIGO AÑADIDO ---
 
 # --- Schemas para Equipo ---
 class EquipoBase(BaseModel):
@@ -72,10 +82,21 @@ class EquipoCreate(EquipoBase):
 
 class Equipo(EquipoBase):
     id: int
-    categoria: Categoria
+    categoria: Categoria # Asumiendo que quieres ver el detalle de la categoría
     jugadores: List[Jugador] = []
     class Config:
         from_attributes = True
+
+# --- INICIO DEL CÓDIGO AÑADIDO (Schema para equipo con plantilla simple) ---
+class EquipoConPlantilla(EquipoBase):
+    id: int
+    escudo: Optional[str] = None # Aseguramos que el escudo esté aquí
+    jugadores: List[JugadorSimple] = [] # Usamos la lista de jugadores simplificada
+
+    class Config:
+        from_attributes = True
+# --- FIN DEL CÓDIGO AÑADIDO ---
+
 
 # --- Schemas para Sede ---
 class SedeBase(BaseModel):
@@ -108,10 +129,10 @@ class EventoPartido(EventoPartidoBase):
 # --- Schemas para Partido ---
 class PartidoBase(BaseModel):
     fecha: date
-    hora: time 
+    hora: time
     jornada: int
-    marcador_local: Optional[int] = 0
-    marcador_visitante: Optional[int] = 0
+    marcador_local: Optional[int] = None # Corregido para aceptar None
+    marcador_visitante: Optional[int] = None # Corregido para aceptar None
 
 class PartidoCreate(PartidoBase):
     equipo_local_id: int
@@ -121,7 +142,7 @@ class PartidoCreate(PartidoBase):
 class Partido(PartidoBase):
     id: int
     sede: Sede
-    equipo_local: Equipo 
+    equipo_local: Equipo
     equipo_visitante: Equipo
     eventos: List[EventoPartido] = []
     class Config:
@@ -137,7 +158,7 @@ class PartidoConNombres(BaseModel):
     equipo_local_nombre: str
     equipo_visitante_nombre: str
     sede_nombre: str
-    
+
     class Config:
         from_attributes = True
 
@@ -156,6 +177,8 @@ class Usuario(UsuarioBase):
         from_attributes = True
 
 # --- Reconstrucción de Modelos ---
+# ¡IMPORTANTE! Asegúrate de que estas llamadas estén DESPUÉS de definir todos los schemas que dependen unos de otros.
 Jugador.model_rebuild()
 Equipo.model_rebuild()
 Partido.model_rebuild()
+EquipoConPlantilla.model_rebuild() # Añadimos la reconstrucción del nuevo schema

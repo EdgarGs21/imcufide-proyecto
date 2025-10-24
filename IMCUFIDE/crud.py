@@ -98,6 +98,17 @@ def delete_equipo(db: Session, equipo_id: int):
         db.commit()
     return db_equipo
 
+# --- INICIO FUNCIÓN AÑADIDA PARA EQUIPOS POR CATEGORÍA ---
+def obtener_equipos_por_categoria(db: Session, categoria_id: int):
+    """Obtiene todos los equipos de una categoría específica, incluyendo sus jugadores."""
+    return (db.query(models.Equipo)
+            .options(joinedload(models.Equipo.jugadores)) # Carga ansiosa de jugadores
+            .filter(models.Equipo.categoria_id == categoria_id)
+            .order_by(models.Equipo.nombre.asc())
+            .all())
+# --- FIN FUNCIÓN AÑADIDA ---
+
+
 # --- CRUD para Jugador ---
 def get_jugadores(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Jugador).offset(skip).limit(limit).all()
@@ -163,8 +174,8 @@ def delete_sede(db: Session, sede_id: int):
 # --- CRUD para Partido ---
 def get_partido(db: Session, partido_id: int):
     return (db.query(models.Partido)
-            .options(joinedload(models.Partido.sede), 
-                     joinedload(models.Partido.equipo_local), 
+            .options(joinedload(models.Partido.sede),
+                     joinedload(models.Partido.equipo_local),
                      joinedload(models.Partido.equipo_visitante),
                      joinedload(models.Partido.eventos))
             .filter(models.Partido.id == partido_id)
@@ -172,8 +183,8 @@ def get_partido(db: Session, partido_id: int):
 
 def get_partidos(db: Session, skip: int = 0, limit: int = 100):
     return (db.query(models.Partido)
-            .options(joinedload(models.Partido.sede), 
-                     joinedload(models.Partido.equipo_local), 
+            .options(joinedload(models.Partido.sede),
+                     joinedload(models.Partido.equipo_local),
                      joinedload(models.Partido.equipo_visitante))
             .offset(skip).limit(limit).all())
 
@@ -201,7 +212,6 @@ def delete_partido(db: Session, partido_id: int):
         db.commit()
     return db_partido
 
-# --- INICIO DEL CÓDIGO AÑADIDO ---
 def obtener_partidos_con_nombres(db: Session):
     EquipoLocal = aliased(models.Equipo, name='equipo_local')
     EquipoVisitante = aliased(models.Equipo, name='equipo_visitante')
@@ -224,7 +234,6 @@ def obtener_partidos_con_nombres(db: Session):
     )
     resultados = db.execute(query).mappings().all()
     return resultados
-# --- FIN DEL CÓDIGO AÑADIDO ---
 
 # --- CRUD para EventoPartido ---
 def create_evento_partido(db: Session, evento: schemas.EventoPartidoCreate):
