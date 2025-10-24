@@ -112,67 +112,163 @@ if (carouselContainer && bannersData && bannersData.length > 0) {
     // --- LÓGICA PARA LAS PESTAÑAS (Tabs) ---
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabPanes = document.querySelectorAll('.tab-pane');
-    if (tabLinks.length > 0) {
+    if (tabLinks.length > 0) { // <-- Asegúrate de que todo este bloque exista
         tabLinks.forEach(link => {
             link.addEventListener('click', () => {
                 const tabId = link.getAttribute('data-tab');
 
+                // Oculta todos los contenidos y quita la clase activa de los enlaces
                 tabLinks.forEach(item => item.classList.remove('active'));
                 tabPanes.forEach(pane => pane.classList.remove('active'));
 
+                // Muestra el contenido y activa el enlace correspondiente
                 const activePane = document.getElementById(tabId);
                 link.classList.add('active');
-                activePane.classList.add('active');
+                if (activePane) { // Añade una verificación si el panel existe
+                   activePane.classList.add('active');
+                }
             });
         });
     }
 
     // --- LÓGICA PARA CARGAR EL CALENDARIO DE PARTIDOS ---
-const gameList = document.querySelector('.game-list');
-if (gameList) {
+  const gameListContainer = document.querySelector('.game-list-container');
+const calendarGridElement = document.querySelector('.calendar-grid');
+
+if (gameListContainer && calendarGridElement) {
+    const gameList = gameListContainer.querySelector('.game-list');
+    const monthYearTitle = document.getElementById('calendar-month-year');
+    const daysGrid = calendarGridElement.querySelector('.days-grid');
+    const prevMonthButton = calendarGridElement.querySelector('.prev-month');
+    const nextMonthButton = calendarGridElement.querySelector('.next-month');
+    const gameListTitle = gameListContainer.querySelector('h4'); // Buscamos el título "Próximos Partidos"
+
     const urlApiPartidos = 'https://imcufide-proyecto.onrender.com/partidos/publico/';
+    let allPartidos = [];
+    let currentDate = new Date();
 
-    fetch(urlApiPartidos)
-        .then(response => {
-            if (!response.ok) throw new Error('Error en la respuesta de la API');
-            return response.json();
-        })
-        .then(partidos => {
-            gameList.innerHTML = ''; // Limpiamos
+    // --- FUNCIONES PARA EL CALENDARIO VISUAL ---
+    function renderCalendar(date, selectedDate = null) { // selectedDate es la fecha clickeada
+        daysGrid.innerHTML = '';
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        monthYearTitle.textContent = date.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date(); today.setHours(0,0,0,0);
 
-            if (partidos.length === 0) {
-                gameList.innerHTML = '<div class="game-item">No hay partidos programados.</div>';
-                return;
+        // Días mes anterior
+        for (let i = 0; i < firstDayOfMonth; i++) { /* ... código para días anteriores ... */
+             const dayCell = document.createElement('div');
+             dayCell.classList.add('day-cell', 'past');
+             daysGrid.appendChild(dayCell);
+         }
+
+        // Días mes actual
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayCell = document.createElement('div');
+            dayCell.classList.add('day-cell');
+            dayCell.textContent = day;
+            dayCell.dataset.date = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; // Guardamos la fecha ISO
+
+            const currentDayDate = new Date(year, month, day); currentDayDate.setHours(0,0,0,0);
+
+            if (currentDayDate.getTime() === today.getTime()) dayCell.classList.add('today');
+
+            // Marcar día seleccionado
+            if (selectedDate && currentDayDate.getTime() === selectedDate.getTime()) {
+                dayCell.classList.add('selected-day');
             }
 
-            partidos.forEach(partido => {
-                const gameItem = document.createElement('div');
-                gameItem.classList.add('game-item');
+            const hasGame = allPartidos.some(partido => partido.fecha === dayCell.dataset.date);
+            if (hasGame) dayCell.classList.add('has-game');
 
-                const fecha = new Date(partido.fecha + 'T' + partido.hora).toLocaleDateString('es-MX', {
-                    month: 'long', day: 'numeric', year: 'numeric'
-                });
-                const hora = new Date(partido.fecha + 'T' + partido.hora).toLocaleTimeString('es-MX', {
-                    hour: 'numeric', minute: '2-digit', hour12: true
-                });
+            daysGrid.appendChild(dayCell);
+        }
+    }
 
-                gameItem.innerHTML = `
-                    <div class="game-info">
-                        <strong>${partido.equipo_local_nombre} vs ${partido.equipo_visitante_nombre}</strong>
-                        <p>${partido.sede_nombre}</p>
-                    </div>
-                    <div class="game-time">
-                        <p>${fecha}</p>
-                        <span>${hora}</span>
-                    </div>
-                `;
-                gameList.appendChild(gameItem);
-            });
+    // --- FUNCIÓN PARA MOSTRAR PARTIDOS EN LA LISTA ---
+    function renderGameList(partidosToShow, title = "Próximos Partidos") {
+         gameListTitle.textContent = title; // Actualizar título de la lista
+         gameList.innerHTML = '';
+
+         if (!partidosToShow || partidosToShow.length === 0) {
+             gameList.innerHTML = `<div class="game-item-placeholder">No hay partidos ${title === "Próximos Partidos" ? 'programados' : 'para esta fecha'}.</div>`;
+             return;
+         }
+
+         partidosToShow.forEach(partido => {
+             // ... (código para crear y añadir .game-item como lo teníamos) ...
+             const gameItem = document.createElement('div');
+             gameItem.classList.add('game-item');
+             const dateTimeString = `${partido.fecha}T${partido.hora}`;
+             const gameDate = new Date(dateTimeString);
+             const fechaFormateada = !isNaN(gameDate) ? gameDate.toLocaleDateString('es-MX', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Fecha inválida';
+             const horaFormateada = !isNaN(gameDate) ? gameDate.toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit', hour12: true }) : 'Hora inválida';
+             gameItem.innerHTML = `
+                 <div class="game-info">
+                     <strong>${partido.equipo_local_nombre} vs ${partido.equipo_visitante_nombre}</strong>
+                     <p>${partido.sede_nombre}</p>
+                 </div>
+                 <div class="game-time">
+                     <p>${fechaFormateada}</p>
+                     <span>${horaFormateada}</span>
+                 </div>
+             `;
+             gameList.appendChild(gameItem);
+         });
+    }
+
+    // --- CARGA INICIAL DE DATOS ---
+    fetch(urlApiPartidos)
+        .then(response => { /* ... código fetch ... */
+             if (!response.ok) throw new Error('Error en la respuesta de la API: ' + response.statusText);
+             return response.json();
+         })
+        .then(partidos => {
+            allPartidos = partidos;
+            renderCalendar(currentDate); // Render calendario inicial
+
+            // Filtrar y mostrar próximos partidos al cargar
+            const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+            const proximosPartidos = allPartidos
+                .filter(partido => new Date(partido.fecha + 'T00:00:00') >= hoy)
+                .sort((a, b) => new Date(a.fecha + 'T' + a.hora) - new Date(b.fecha + 'T' + b.hora));
+            renderGameList(proximosPartidos, "Próximos Partidos");
         })
-        .catch(error => {
-            console.error('Hubo un problema al obtener los partidos:', error);
-            gameList.innerHTML = '<div class="game-item">No se pudo cargar el calendario.</div>';
-        });
-}
+        .catch(error => { /* ... código catch ... */
+             console.error('Hubo un problema al obtener los partidos:', error);
+             gameList.innerHTML = '<div class="game-item-placeholder">No se pudo cargar el calendario.</div>';
+             monthYearTitle.textContent = 'Error al cargar';
+             daysGrid.innerHTML = '<div style="grid-column: 1 / -1; color: red;">No se pudo conectar.</div>';
+         });
 
+    // --- EVENT LISTENERS PARA NAVEGACIÓN Y CLICS EN DÍAS ---
+    prevMonthButton.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
+    nextMonthButton.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
+
+    daysGrid.addEventListener('click', (event) => {
+        const clickedDay = event.target.closest('.day-cell:not(.past)'); // Solo días del mes actual
+        if (!clickedDay || !clickedDay.dataset.date) return; // Si no es un día válido, salir
+
+        const selectedDateISO = clickedDay.dataset.date;
+        const selectedDateObj = new Date(selectedDateISO + 'T00:00:00');
+
+        // Filtrar partidos para la fecha seleccionada
+        const partidosDelDia = allPartidos.filter(partido => partido.fecha === selectedDateISO);
+
+        // Actualizar la lista de partidos
+        const title = `Partidos del ${selectedDateObj.toLocaleDateString('es-MX', {day: 'numeric', month: 'long'})}`;
+        renderGameList(partidosDelDia, title);
+
+        // Volver a renderizar el calendario resaltando el día seleccionado
+        renderCalendar(currentDate, selectedDateObj);
+    });
+}
 });
