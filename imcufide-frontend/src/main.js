@@ -1,16 +1,13 @@
 // src/main.js
 
-// Importamos los datos de nuestro archivo de banners (para index.html)
 import { bannersData } from './banners.js';
 
-// Espera a que todo el contenido de la página se cargue
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- LÓGICA DEL HEADER (CON OCULTAMIENTO AUTOMÁTICO) ---
     const header = document.querySelector('.main-header');
     if (header) {
         let lastScrollY = window.scrollY; 
-
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
             if (currentScrollY > lastScrollY && currentScrollY > 50) {
@@ -30,9 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const nav = carouselContainer.querySelector('.carousel-nav');
         let slides = [];
         let dots = [];
-        let currentSlideIndex = 1; // Start at the first real slide
+        let currentSlideIndex = 1;
 
-        // 1. Populate carousel
         bannersData.forEach((banner, index) => {
             const slide = document.createElement('div');
             slide.classList.add('carousel-slide');
@@ -46,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
             nav.appendChild(dot);
         });
 
-        // 2. Create clones
         const firstClone = track.firstElementChild.cloneNode(true);
         const lastClone = track.lastElementChild.cloneNode(true);
         track.appendChild(firstClone);
@@ -56,62 +51,57 @@ document.addEventListener('DOMContentLoaded', () => {
         dots = Array.from(nav.children);
         const slideWidth = slides.length > 0 ? slides[0].getBoundingClientRect().width : 0;
         
-        // 3. Initial position
         track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
 
         const updateDots = (targetIndex) => {
             dots.forEach(dot => dot.classList.remove('active'));
-            let activeDotIndex = targetIndex - 1; // Adjust index because of the prepended clone
-            if (targetIndex === 0) activeDotIndex = dots.length - 1; // Loop back for first clone
-            if (targetIndex === slides.length - 1) activeDotIndex = 0; // Loop forward for last clone
-            dots[activeDotIndex].classList.add('active');
+            let activeDotIndex = targetIndex - 1;
+            if (targetIndex === 0) activeDotIndex = dots.length - 1;
+            if (targetIndex === slides.length - 1) activeDotIndex = 0;
+            if (dots[activeDotIndex]) dots[activeDotIndex].classList.add('active'); // Safety check
         };
 
         const moveToSlide = () => {
-            if (!track) return; // Add safety check
+            if (!track) return;
             track.style.transition = 'transform 0.5s ease-in-out';
             track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
             updateDots(currentSlideIndex);
         };
 
-        // 4. Auto slide logic
         const goToNextSlide = () => {
             if (currentSlideIndex >= slides.length - 1) return; 
             currentSlideIndex++;
             moveToSlide();
         };
 
-        // 5. Infinite loop transition fix
         track.addEventListener('transitionend', () => {
-             if (!track) return; // Add safety check
-            if (currentSlideIndex === slides.length - 1) { // Reached last clone (looks like first slide)
+             if (!track) return;
+            if (currentSlideIndex === slides.length - 1) {
                 track.style.transition = 'none';
-                currentSlideIndex = 1; // Jump to the real first slide
+                currentSlideIndex = 1;
                 track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
             }
-             if (currentSlideIndex === 0) { // Reached first clone (looks like last slide)
+             if (currentSlideIndex === 0) {
                  track.style.transition = 'none';
-                 currentSlideIndex = slides.length - 2; // Jump to the real last slide
+                 currentSlideIndex = slides.length - 2;
                  track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
              }
         });
 
-        // Dots navigation
         nav.addEventListener('click', e => {
             const targetDot = e.target.closest('button');
             if (!targetDot) return;
-            currentSlideIndex = parseInt(targetDot.dataset.index) + 1; // +1 for the initial clone
+            currentSlideIndex = parseInt(targetDot.dataset.index) + 1;
             moveToSlide();
         });
 
-        // Start auto slide
-        setInterval(goToNextSlide, 4500); // Changed interval slightly
+        setInterval(goToNextSlide, 4500);
     }
 
     // --- LÓGICA PARA LAS PESTAÑAS (Tabs) ---
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabPanes = document.querySelectorAll('.tab-pane');
-    if (tabLinks.length > 0 && tabPanes.length > 0) { // Check for panes too
+    if (tabLinks.length > 0 && tabPanes.length > 0) {
         tabLinks.forEach(link => {
             link.addEventListener('click', () => {
                 const tabId = link.getAttribute('data-tab');
@@ -124,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (activePane) {
                     activePane.classList.add('active');
 
-                    // ---> Lógica para cargar Equipos al hacer clic <---
+                    // Lógica para cargar Equipos al hacer clic
                     if (tabId === 'tab-3' && !activePane.dataset.loaded) { 
                         cargarEquiposYPlantillas(activePane);
                         activePane.dataset.loaded = 'true'; 
@@ -132,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        // Ensure the initially active tab's content is visible
+        // Asegurar que el contenido de la pestaña activa inicial sea visible
         const initiallyActiveLink = document.querySelector('.tab-link.active');
         if(initiallyActiveLink){
             const initialTabId = initiallyActiveLink.getAttribute('data-tab');
@@ -148,7 +138,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         teamsContainer.innerHTML = '<p>Cargando equipos...</p>'; 
 
-        const categoriaId = 3; // ¡¡¡ RECUERDA CAMBIAR SI ES NECESARIO !!!
+        // --- DETECCIÓN AUTOMÁTICA DEL ID DE CATEGORÍA ---
+        let categoriaId = null;
+        const pageName = window.location.pathname.split('/').pop(); 
+
+        if (pageName === 'liga-juvenil-a.html') {
+            categoriaId = 3; // ¡VERIFICA ESTE ID EN SUPABASE!
+        } else if (pageName === 'liga-juvenil-b.html') {
+            categoriaId = 2; // ¡VERIFICA ESTE ID EN SUPABASE!
+        } else if (pageName === 'liga-infantil.html') {
+            categoriaId = 1; // ¡VERIFICA ESTE ID EN SUPABASE!
+        }
+
+        if (!categoriaId) { 
+            console.error("No se pudo determinar el ID de la categoría para esta página:", pageName);
+            teamsContainer.innerHTML = '<p>Error al cargar la categoría.</p>';
+            return;
+        }
+        // --- FIN DE LA DETECCIÓN ---
+
         const urlApiEquipos = `https://imcufide-proyecto.onrender.com/equipos/categoria/${categoriaId}/plantillas/`;
 
         fetch(urlApiEquipos)
@@ -182,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         jugadoresHtml = '<tr><td colspan="3">No hay jugadores registrados.</td></tr>';
                     }
-
 
                     teamCard.innerHTML = `
                         <header class="team-card-header">
@@ -264,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function renderGameList(partidosToShow, title = "Próximos Partidos") {
-             if (!gameListTitle || !gameList) return; // Add safety checks
+             if (!gameListTitle || !gameList) return; 
              gameListTitle.textContent = title; 
              gameList.innerHTML = '';
 
@@ -338,4 +345,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-}); 
+});
