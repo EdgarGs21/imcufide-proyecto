@@ -9,110 +9,109 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DEL HEADER (CON OCULTAMIENTO AUTOMÁTICO) ---
     const header = document.querySelector('.main-header');
     if (header) {
-        let lastScrollY = window.scrollY; // Guardamos la posición inicial
+        let lastScrollY = window.scrollY; 
 
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-
-            // Le damos un pequeño margen (más de 5px) para evitar activaciones accidentales
             if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                // Si bajamos, escondemos el header
                 header.classList.add('header-hidden');
             } else {
-                // Si subimos, lo mostramos
                 header.classList.remove('header-hidden');
             }
-            // Actualizamos la última posición del scroll
             lastScrollY = currentScrollY;
         };
-
         window.addEventListener('scroll', handleScroll);
     }
 
-// --- LÓGICA PARA EL NUEVO CARRUSEL (CON LOOP INFINITO) ---
-const carouselContainer = document.querySelector('.carousel-container');
-if (carouselContainer && bannersData && bannersData.length > 0) {
-    const track = carouselContainer.querySelector('.carousel-track');
-    const nav = carouselContainer.querySelector('.carousel-nav');
-    
-    // 1. Poblar el carrusel con las imágenes y los puntos
-    bannersData.forEach((banner, index) => {
-        const slide = document.createElement('div');
-        slide.classList.add('carousel-slide');
-        slide.innerHTML = `<img src="${banner.imagen}" alt="${banner.titulo}">`;
-        track.appendChild(slide);
+    // --- LÓGICA PARA EL CARRUSEL DE BANNERS (index.html) ---
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer && bannersData && bannersData.length > 0) {
+        const track = carouselContainer.querySelector('.carousel-track');
+        const nav = carouselContainer.querySelector('.carousel-nav');
+        let slides = [];
+        let dots = [];
+        let currentSlideIndex = 1; // Start at the first real slide
 
-        const dot = document.createElement('button');
-        dot.classList.add('carousel-indicator');
-        if (index === 0) dot.classList.add('active');
-        dot.dataset.index = index;
-        nav.appendChild(dot);
-    });
+        // 1. Populate carousel
+        bannersData.forEach((banner, index) => {
+            const slide = document.createElement('div');
+            slide.classList.add('carousel-slide');
+            slide.innerHTML = `<img src="${banner.imagen}" alt="${banner.titulo}">`;
+            track.appendChild(slide);
 
-    // 2. Crear los clones para el loop infinito
-    const firstClone = track.firstElementChild.cloneNode(true);
-    const lastClone = track.lastElementChild.cloneNode(true);
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, track.firstElementChild);
+            const dot = document.createElement('button');
+            dot.classList.add('carousel-indicator');
+            if (index === 0) dot.classList.add('active');
+            dot.dataset.index = index;
+            nav.appendChild(dot);
+        });
 
-    const slides = Array.from(track.children);
-    const dots = Array.from(nav.children);
-    const slideWidth = slides[0].getBoundingClientRect().width;
-    let currentSlideIndex = 1; // Empezamos en la primera imagen REAL, no en el clon
+        // 2. Create clones
+        const firstClone = track.firstElementChild.cloneNode(true);
+        const lastClone = track.lastElementChild.cloneNode(true);
+        track.appendChild(firstClone);
+        track.insertBefore(lastClone, track.firstElementChild);
 
-    // 3. Posición inicial del carrusel
-    track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
-
-    const updateDots = (targetIndex) => {
-        dots.forEach(dot => dot.classList.remove('active'));
-        // Ajustamos el índice para los clones
-        if (targetIndex === 0) {
-            dots[dots.length - 1].classList.add('active');
-        } else if (targetIndex === slides.length - 1) {
-            dots[0].classList.add('active');
-        } else {
-            dots[targetIndex - 1].classList.add('active');
-        }
-    };
-
-    const moveToSlide = () => {
-        track.style.transition = 'transform 0.5s ease-in-out';
+        slides = Array.from(track.children);
+        dots = Array.from(nav.children);
+        const slideWidth = slides.length > 0 ? slides[0].getBoundingClientRect().width : 0;
+        
+        // 3. Initial position
         track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
-        updateDots(currentSlideIndex);
-    };
 
-    // 4. Lógica para el movimiento automático
-    const goToNextSlide = () => {
-        if (currentSlideIndex >= slides.length - 1) return; // Previene múltiples saltos
-        currentSlideIndex++;
-        moveToSlide();
-    };
+        const updateDots = (targetIndex) => {
+            dots.forEach(dot => dot.classList.remove('active'));
+            let activeDotIndex = targetIndex - 1; // Adjust index because of the prepended clone
+            if (targetIndex === 0) activeDotIndex = dots.length - 1; // Loop back for first clone
+            if (targetIndex === slides.length - 1) activeDotIndex = 0; // Loop forward for last clone
+            dots[activeDotIndex].classList.add('active');
+        };
 
-    // 5. El "Salto Mágico"
-    track.addEventListener('transitionend', () => {
-        if (currentSlideIndex === slides.length - 1) { // Si estamos en el clon del final
-            track.style.transition = 'none'; // Desactivamos la animación
-            currentSlideIndex = 1; // Saltamos a la primera imagen real
+        const moveToSlide = () => {
+            if (!track) return; // Add safety check
+            track.style.transition = 'transform 0.5s ease-in-out';
             track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
-        }
-    });
+            updateDots(currentSlideIndex);
+        };
 
-    // Lógica de los puntos
-    nav.addEventListener('click', e => {
-        const targetDot = e.target.closest('button');
-        if (!targetDot) return;
-        currentSlideIndex = parseInt(targetDot.dataset.index) + 1; // +1 por el clon inicial
-        moveToSlide();
-    });
+        // 4. Auto slide logic
+        const goToNextSlide = () => {
+            if (currentSlideIndex >= slides.length - 1) return; 
+            currentSlideIndex++;
+            moveToSlide();
+        };
 
-    // Iniciar el intervalo automático
-    setInterval(goToNextSlide, 4500);
-}
+        // 5. Infinite loop transition fix
+        track.addEventListener('transitionend', () => {
+             if (!track) return; // Add safety check
+            if (currentSlideIndex === slides.length - 1) { // Reached last clone (looks like first slide)
+                track.style.transition = 'none';
+                currentSlideIndex = 1; // Jump to the real first slide
+                track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
+            }
+             if (currentSlideIndex === 0) { // Reached first clone (looks like last slide)
+                 track.style.transition = 'none';
+                 currentSlideIndex = slides.length - 2; // Jump to the real last slide
+                 track.style.transform = `translateX(-${slideWidth * currentSlideIndex}px)`;
+             }
+        });
+
+        // Dots navigation
+        nav.addEventListener('click', e => {
+            const targetDot = e.target.closest('button');
+            if (!targetDot) return;
+            currentSlideIndex = parseInt(targetDot.dataset.index) + 1; // +1 for the initial clone
+            moveToSlide();
+        });
+
+        // Start auto slide
+        setInterval(goToNextSlide, 4500); // Changed interval slightly
+    }
 
     // --- LÓGICA PARA LAS PESTAÑAS (Tabs) ---
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabPanes = document.querySelectorAll('.tab-pane');
-    if (tabLinks.length > 0) {
+    if (tabLinks.length > 0 && tabPanes.length > 0) { // Check for panes too
         tabLinks.forEach(link => {
             link.addEventListener('click', () => {
                 const tabId = link.getAttribute('data-tab');
@@ -122,50 +121,221 @@ if (carouselContainer && bannersData && bannersData.length > 0) {
 
                 const activePane = document.getElementById(tabId);
                 link.classList.add('active');
-                activePane.classList.add('active');
+                if (activePane) {
+                    activePane.classList.add('active');
+
+                    // ---> Lógica para cargar Equipos al hacer clic <---
+                    if (tabId === 'tab-3' && !activePane.dataset.loaded) { 
+                        cargarEquiposYPlantillas(activePane);
+                        activePane.dataset.loaded = 'true'; 
+                    }
+                }
             });
         });
+        // Ensure the initially active tab's content is visible
+        const initiallyActiveLink = document.querySelector('.tab-link.active');
+        if(initiallyActiveLink){
+            const initialTabId = initiallyActiveLink.getAttribute('data-tab');
+            const initialActivePane = document.getElementById(initialTabId);
+            if(initialActivePane) initialActivePane.classList.add('active');
+        }
     }
 
-    // --- LÓGICA PARA CARGAR EL CALENDARIO DE PARTIDOS ---
-    const calendarioTabla = document.querySelector('.match-calendar');
-    if (calendarioTabla) {
-        const cuerpoTabla = calendarioTabla.querySelector('tbody');
-        const urlApiPartidos = 'https://imcufide-proyecto.onrender.com/partidos/publico/';
+    // --- FUNCIÓN PARA CARGAR EQUIPOS Y PLANTILLAS ---
+    function cargarEquiposYPlantillas(targetPane) {
+        const teamsContainer = targetPane.querySelector('.teams-container');
+        if (!teamsContainer) return;
 
-        fetch(urlApiPartidos)
+        teamsContainer.innerHTML = '<p>Cargando equipos...</p>'; 
+
+        const categoriaId = 3; // ¡¡¡ RECUERDA CAMBIAR SI ES NECESARIO !!!
+        const urlApiEquipos = `https://imcufide-proyecto.onrender.com/equipos/categoria/${categoriaId}/plantillas/`;
+
+        fetch(urlApiEquipos)
             .then(response => {
-                if (!response.ok) throw new Error('Error en la respuesta de la API');
+                if (!response.ok) throw new Error('Error en API de equipos: ' + response.statusText);
                 return response.json();
             })
-            .then(partidos => {
-                cuerpoTabla.innerHTML = ''; // Limpiamos la tabla de ejemplo
+            .then(equipos => {
+                teamsContainer.innerHTML = ''; 
 
-                if (partidos.length === 0) {
-                    cuerpoTabla.innerHTML = '<tr><td colspan="5">No hay partidos programados por el momento.</td></tr>';
+                if (!equipos || equipos.length === 0) {
+                    teamsContainer.innerHTML = '<p>No hay equipos registrados en esta categoría.</p>';
                     return;
                 }
 
-                partidos.forEach(partido => {
-                    const fila = document.createElement('tr');
-                    const fechaFormateada = new Date(partido.fecha + 'T00:00:00').toLocaleDateString('es-MX', {
-                        day: '2-digit', month: 'long', year: 'numeric'
-                    });
-                    
-                    fila.innerHTML = `
-                        <td>${fechaFormateada}</td>
-                        <td>${partido.equipo_local_nombre}</td>
-                        <td>${partido.equipo_visitante_nombre}</td>
-                        <td>${partido.sede_nombre}</td>
-                        <td>${partido.marcador_local !== null ? partido.marcador_local : '-'} - ${partido.marcador_visitante !== null ? partido.marcador_visitante : '-'}</td>
+                equipos.forEach(equipo => {
+                    const teamCard = document.createElement('article');
+                    teamCard.classList.add('team-card');
+
+                    let jugadoresHtml = '';
+                    if (equipo.jugadores && equipo.jugadores.length > 0) {
+                        equipo.jugadores.forEach(jugador => {
+                            jugadoresHtml += `
+                                <tr>
+                                    <td>${jugador.dorsal !== null ? jugador.dorsal : '-'}</td>
+                                    <td>${jugador.nombre}</td>
+                                    <td>${jugador.posicion || '-'}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        jugadoresHtml = '<tr><td colspan="3">No hay jugadores registrados.</td></tr>';
+                    }
+
+
+                    teamCard.innerHTML = `
+                        <header class="team-card-header">
+                            <img src="${equipo.escudo || './src/assets/icons/equipo-placeholder.png'}" alt="Escudo de ${equipo.nombre}" class="team-shield">
+                            <h2>${equipo.nombre}</h2>
+                        </header>
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th>Dorsal</th>
+                                    <th>Nombre</th>
+                                    <th>Posición</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${jugadoresHtml}
+                            </tbody>
+                        </table>
                     `;
-                    cuerpoTabla.appendChild(fila);
+                    teamsContainer.appendChild(teamCard);
                 });
             })
             .catch(error => {
-                console.error('Hubo un problema al obtener los partidos:', error);
-                cuerpoTabla.innerHTML = '<tr><td colspan="5">No se pudo cargar el calendario. Por favor, intente más tarde.</td></tr>';
+                console.error('Error al obtener equipos:', error);
+                teamsContainer.innerHTML = '<p>No se pudo cargar la información de los equipos.</p>';
             });
     }
 
-});
+    // --- LÓGICA PARA CARGAR EL CALENDARIO DE PARTIDOS ---
+    const gameListContainer = document.querySelector('.game-list-container');
+    const calendarGridElement = document.querySelector('.calendar-grid');
+
+    if (gameListContainer && calendarGridElement) {
+        const gameList = gameListContainer.querySelector('.game-list');
+        const monthYearTitle = document.getElementById('calendar-month-year');
+        const daysGrid = calendarGridElement.querySelector('.days-grid');
+        const prevMonthButton = calendarGridElement.querySelector('.prev-month');
+        const nextMonthButton = calendarGridElement.querySelector('.next-month');
+        const gameListTitle = gameListContainer.querySelector('h4'); 
+
+        const urlApiPartidos = 'https://imcufide-proyecto.onrender.com/partidos/publico/';
+        let allPartidos = [];
+        let currentDate = new Date();
+
+        function renderCalendar(date, selectedDate = null) {
+            daysGrid.innerHTML = '';
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            monthYearTitle.textContent = date.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date(); today.setHours(0,0,0,0);
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                 const dayCell = document.createElement('div');
+                 dayCell.classList.add('day-cell', 'past');
+                 daysGrid.appendChild(dayCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.classList.add('day-cell');
+                dayCell.textContent = day;
+                dayCell.dataset.date = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; 
+
+                const currentDayDate = new Date(year, month, day); currentDayDate.setHours(0,0,0,0);
+
+                if (currentDayDate.getTime() === today.getTime()) dayCell.classList.add('today');
+
+                if (selectedDate && currentDayDate.getTime() === selectedDate.getTime()) {
+                    dayCell.classList.add('selected-day');
+                }
+
+                const hasGame = allPartidos.some(partido => partido.fecha === dayCell.dataset.date);
+                if (hasGame) dayCell.classList.add('has-game');
+
+                daysGrid.appendChild(dayCell);
+            }
+        }
+
+        function renderGameList(partidosToShow, title = "Próximos Partidos") {
+             if (!gameListTitle || !gameList) return; // Add safety checks
+             gameListTitle.textContent = title; 
+             gameList.innerHTML = '';
+
+             if (!partidosToShow || partidosToShow.length === 0) {
+                 gameList.innerHTML = `<div class="game-item-placeholder">No hay partidos ${title === "Próximos Partidos" ? 'programados' : 'para esta fecha'}.</div>`;
+                 return;
+             }
+
+             partidosToShow.forEach(partido => {
+                 const gameItem = document.createElement('div');
+                 gameItem.classList.add('game-item');
+                 const dateTimeString = `${partido.fecha}T${partido.hora}`;
+                 const gameDate = new Date(dateTimeString);
+                 const fechaFormateada = !isNaN(gameDate) ? gameDate.toLocaleDateString('es-MX', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Fecha inválida';
+                 const horaFormateada = !isNaN(gameDate) ? gameDate.toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit', hour12: true }) : 'Hora inválida';
+                 gameItem.innerHTML = `
+                     <div class="game-info">
+                         <strong>${partido.equipo_local_nombre} vs ${partido.equipo_visitante_nombre}</strong>
+                         <p>${partido.sede_nombre}</p>
+                     </div>
+                     <div class="game-time">
+                         <p>${fechaFormateada}</p>
+                         <span>${horaFormateada}</span>
+                     </div>
+                 `;
+                 gameList.appendChild(gameItem);
+             });
+        }
+
+        fetch(urlApiPartidos)
+            .then(response => { 
+                 if (!response.ok) throw new Error('Error en la respuesta de la API: ' + response.statusText);
+                 return response.json();
+             })
+            .then(partidos => {
+                allPartidos = partidos;
+                renderCalendar(currentDate); 
+
+                const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+                const proximosPartidos = allPartidos
+                    .filter(partido => new Date(partido.fecha + 'T00:00:00') >= hoy)
+                    .sort((a, b) => new Date(a.fecha + 'T' + a.hora) - new Date(b.fecha + 'T' + b.hora));
+                renderGameList(proximosPartidos, "Próximos Partidos");
+            })
+            .catch(error => { 
+                 console.error('Hubo un problema al obtener los partidos:', error);
+                 if (gameList) gameList.innerHTML = '<div class="game-item-placeholder">No se pudo cargar el calendario.</div>';
+                 if (monthYearTitle) monthYearTitle.textContent = 'Error al cargar';
+                 if (daysGrid) daysGrid.innerHTML = '<div style="grid-column: 1 / -1; color: red;">No se pudo conectar.</div>';
+             });
+
+        if(prevMonthButton) prevMonthButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar(currentDate);
+        });
+        if(nextMonthButton) nextMonthButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate);
+        });
+        if(daysGrid) daysGrid.addEventListener('click', (event) => {
+            const clickedDay = event.target.closest('.day-cell:not(.past)'); 
+            if (!clickedDay || !clickedDay.dataset.date) return; 
+
+            const selectedDateISO = clickedDay.dataset.date;
+            const selectedDateObj = new Date(selectedDateISO + 'T00:00:00');
+            const partidosDelDia = allPartidos.filter(partido => partido.fecha === selectedDateISO);
+            const title = `Partidos del ${selectedDateObj.toLocaleDateString('es-MX', {day: 'numeric', month: 'long'})}`;
+            
+            renderGameList(partidosDelDia, title);
+            renderCalendar(currentDate, selectedDateObj);
+        });
+    }
+
+}); 

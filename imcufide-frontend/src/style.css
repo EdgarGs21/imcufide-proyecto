@@ -21,7 +21,7 @@ body {
     background-color: var(--color-blanco);
     background-image: url('./src/assets/pattern.png');
     background-repeat: repeat;
-    padding-top: 85px; 
+    padding-top: 85px;
 }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
 
@@ -62,12 +62,8 @@ body {
 .section-title { font-family: var(--font-heading); font-size: 2.5rem; color: var(--color-secundario); margin-bottom: 0.5rem; }
 .section-subtitle { font-size: 1.1rem; color: #666; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
 
-/* --- 3.1 Nuevo Carrusel de Banners --- */
-.new-carousel-section {
-    padding: 2rem 0;
-    background-color: var(--color-beige-claro);
-    margin-top: -85px;
-}
+/* --- 3.1 Carrusel de Banners (Página Principal) --- */
+.new-carousel-section { padding: 2rem 0; background-color: var(--color-primario); margin-top: -85px; }
 .carousel-container { max-width: 1200px; margin: 0 auto; position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
 .carousel-slide { min-width: 100%; position: relative; }
@@ -77,12 +73,12 @@ body {
 .carousel-indicator { width: 12px; height: 12px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.2); cursor: pointer; transition: background-color 0.3s ease; }
 .carousel-indicator.active { background-color: white; }
 
-/* --- 3.2 Sección de Video --- */
+/* --- 3.2 Sección de Video (Página Principal) --- */
 .video-section { padding: 2rem 2rem 4rem; background-color: var(--color-beige-claro); text-align: center; margin-top: -60px; position: relative; z-index: 10; }
 .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 1000px; margin: 2rem auto 0; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-/* --- 3.3 Sección HUB de Deportes --- */
+/* --- 3.3 Sección HUB de Deportes (Página Principal) --- */
 .leagues-hub-section { padding: 4rem 2rem 0; background-color: var(--color-blanco); text-align: center; }
 .hub-sport-icons { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2.5rem; margin-bottom: 1.5rem; }
 .hub-sport-icons a img { height: 90px; transition: transform 0.3s ease; }
@@ -91,189 +87,92 @@ body {
 .hub-jaguar-logo { max-width: 600px; height: auto; margin-bottom: 2.5rem; }
 .hub-tagline { font-size: 1.2rem; color: var(--color-primario); font-weight: 700; margin-top: 1rem; letter-spacing: 0.1em; }
 
-/* --- 3.4 Sección de Facebook --- */
-.facebook-section {
-    padding: 4rem 2rem; /* Aumentamos el padding para darle más aire */
-    background-color: var(--color-beige-claro); /* CAMBIO: Fondo Beige */
-    text-align: center;
-    border-top: 1px solid #e0d9d1; /* CAMBIO: Borde sutil */
-}
+/* --- 3.4 Sección de Facebook (Página Principal) --- */
+.facebook-section { padding: 4rem 2rem; background-color: var(--color-beige-claro); text-align: center; border-top: 1px solid #e0d9d1; }
 .facebook-feed-wrapper { display: flex; justify-content: center; margin-top: 2rem; }
 
-/* --- 3.5 Estilos para Páginas de Ligas (Hero y Tarjetas) --- */
-.league-hero {
-    height: 45vh;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: var(--color-blanco);
-    position: relative;
-    margin-top: -85px;
-}
-.league-hero::before {
-    content: ''; 
-    position: absolute; 
-    top: 0; 
-    left: 0;
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.5);
-}
-.league-hero-content { 
-    position: relative; 
-    z-index: 2; 
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.7); 
-}
-.league-hero h1 { 
-    font-family: var(--font-heading); 
-    font-size: 3rem; 
-}
+/* --- 3.5 Estilos Comunes Páginas Internas (Ligas/Categorías) --- */
+.league-hero { height: 45vh; background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; text-align: center; color: var(--color-blanco); position: relative; margin-top: -85px; }
+.league-hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+.league-hero-content { position: relative; z-index: 2; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
+.league-hero h1 { font-family: var(--font-heading); font-size: 3rem; }
+.breadcrumbs { background-color: #f8f9fa; padding: 1rem 0; border-bottom: 1px solid #e9ecef; }
+.breadcrumbs .container { padding: 0 1rem; }
+.breadcrumbs a { text-decoration: none; color: var(--color-secundario); font-weight: 700; font-size: 1rem; display: inline-flex; align-items: center; transition: color 0.3s ease; }
+.breadcrumbs a::before { content: '‹'; margin-right: 8px; font-size: 1.5rem; line-height: 1; }
+.breadcrumbs a:hover { color: var(--color-primario); }
 
-.category-section {
-    padding: 4rem 2rem;
-    background-color: #f9f9f9;
-    text-align: center;
-}
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 3rem auto 0;
-}
-.category-card {
-    background-color: var(--color-blanco);
-    border-radius: 20px;
-    text-align: center;
-    padding: 2rem 1.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    text-decoration: none;
-    color: var(--color-secundario);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #eee;
-    border-top: 5px solid var(--color-secundario);
-}
-.category-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-}
-.card-image-wrapper {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 1.5rem;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 0 5px var(--color-blanco), 0 0 0 7px var(--color-beige-claro);
-}
-.card-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.category-card h3 {
-    font-family: var(--font-heading);
-    font-size: 1.8rem;
-    color: var(--color-primario);
-}
-.category-card p {
-    font-size: 1rem;
-    color: #666;
-    margin-top: 0.25rem;
-}
-.card-day-label {
-    display: inline-block;
-    padding: 0.3rem 1rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.8rem;
-    margin-top: 1rem;
-    color: var(--color-blanco);
-    background-color: var(--color-acento);
-}
+/* --- 3.6 Estilos Página Liga (Tarjetas Categoría) --- */
+.category-section { padding: 4rem 2rem; background-color: #f9f9f9; text-align: center; }
+.category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 3rem auto 0; }
+.category-card { background-color: var(--color-blanco); border-radius: 20px; text-align: center; padding: 2rem 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-decoration: none; color: var(--color-secundario); transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid #eee; border-top: 5px solid var(--color-secundario); }
+.category-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
+.card-image-wrapper { width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 5px var(--color-blanco), 0 0 0 7px var(--color-beige-claro); }
+.card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.category-card h3 { font-family: var(--font-heading); font-size: 1.8rem; color: var(--color-primario); }
+.category-card p { font-size: 1rem; color: #666; margin-top: 0.25rem; }
+.card-day-label { display: inline-block; padding: 0.3rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem; margin-top: 1rem; color: var(--color-blanco); background-color: var(--color-acento); }
 
-/* --- 3.6 Estilos para Páginas de Detalle... --- */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
+/* --- 3.7 Estilos Página Categoría (Pestañas) --- */
+.tabs-section { padding: 3rem 2rem; margin-bottom: 4rem; }
+.tabs-nav { display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; background-color: #f7f7f7; border-radius: 10px; padding: 0.5rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+.tab-link { padding: 0.8rem 1.5rem; border: none; background-color: transparent; cursor: pointer; font-size: 1rem; font-weight: 700; font-family: var(--font-heading); color: #888; border-radius: 8px; transition: color 0.3s ease, background-color 0.3s ease; }
+.tab-link::after { content: none; }
+.tab-link:hover { color: var(--color-primario); background-color: #eee; }
+.tab-link.active { color: var(--color-blanco); background-color: var(--color-primario); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeIn 0.5s ease; }
+.tab-pane h3 { font-size: 1.8rem; color: var(--color-secundario); margin-bottom: 1.5rem; }
 
-.info-card {
-    background-color: var(--color-blanco);
-    border: 1px solid #eee;
-    border-radius: 15px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
+/* --- 3.7.1 Pestaña Información (Tarjetas) --- */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem; }
+.info-card { background-color: var(--color-blanco); border: 1px solid #eee; border-radius: 15px; padding: 1.5rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.info-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+.info-card-icon { height: 32px; width: 32px; }
+.info-card-header h3 { font-size: 1.3rem; color: var(--color-secundario); margin: 0; }
+.info-card-body p { margin-bottom: 1rem; line-height: 1.6; }
+.custom-list { list-style: none; padding: 0; }
+.custom-list li { position: relative; padding-left: 28px; margin-bottom: 0.75rem; }
+.custom-list li::before { position: absolute; left: 0; top: 2px; font-size: 1.2rem; font-weight: bold; }
+.custom-list li.checkmark::before { content: '✓'; color: #28a745; }
+.custom-list li.circle::before { content: '○'; color: #007bff; }
+.custom-list li.star::before { content: '☆'; color: var(--color-acento); }
 
-.info-card-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-}
-
-.info-card-icon {
-    height: 32px;
-    width: 32px;
-}
-
-.info-card-header h3 {
-    font-size: 1.3rem;
-    color: var(--color-secundario);
-    margin: 0;
-}
-
-.info-card-body p {
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
-/* Estilos para las listas con íconos personalizados */
-.custom-list {
-    list-style: none;
-    padding: 0;
-}
-.custom-list li {
-    position: relative;
-    padding-left: 28px;
-    margin-bottom: 0.75rem;
-}
-.custom-list li::before {
-    position: absolute;
-    left: 0;
-    top: 2px;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-.custom-list li.checkmark::before {
-    content: '✓';
-    color: #28a745; /* Verde */
-}
-.custom-list li.circle::before {
-    content: '○';
-    color: #007bff; /* Azul */
-}
-.custom-list li.star::before {
-    content: '☆';
-    color: var(--color-acento); /* Oro */
-}
+/* --- 3.7.2 Pestaña Calendario (Barra Búsqueda y Lista) --- */
+.search-bar { position: relative; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+.search-bar img { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); height: 20px; opacity: 0.4; }
+.search-bar input { width: 100%; padding: 1rem 1rem 1rem 50px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; background-color: #fdfdfd; }
+.game-list-container { max-width: 800px; margin: 0 auto; }
+.game-list-container h4 { font-family: var(--font-heading); font-size: 1.5rem; color: var(--color-secundario); margin-bottom: 1rem; text-align: left; }
+.game-list { background-color: var(--color-blanco); border-radius: 10px; border: 1px solid #eee; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.game-item { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid #f0f0f0; transition: background-color 0.2s ease; }
+.game-item:last-child { border-bottom: none; }
+.game-item:hover { background-color: #fafafa; }
+.game-item-placeholder { padding: 2rem; text-align: center; color: #888; }
+.game-info strong { font-family: var(--font-heading); font-size: 1.1rem; color: var(--color-secundario); display: block; }
+.game-info p { font-size: 0.9rem; color: #777; margin-top: 0.25rem; }
+.game-time { text-align: right; min-width: 150px; }
+.game-time p { font-weight: 700; color: var(--color-primario); font-size: 0.9rem; margin-bottom: 0.25rem; }
+.game-time span { font-size: 0.9rem; color: #555; }
+.calendar-grid { max-width: 600px; margin: 0 auto 3rem auto; background-color: var(--color-blanco); border: 1px solid #eee; border-radius: 10px; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.calendar-month .month-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.month-header h4 { font-family: var(--font-heading); color: var(--color-secundario); margin: 0; }
+.month-header button { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-primario); }
+.days-header, .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+.days-header { font-weight: bold; color: #999; padding-bottom: 0.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid #eee; }
+.day-cell { padding: 0.5rem; color: var(--color-secundario); cursor: pointer; border-radius: 50%; transition: background-color 0.2s ease, color 0.2s ease; }
+.day-cell:not(.past):hover { background-color: #f0f0f0; }
+.day-cell.past { color: #ccc; cursor: default; }
+.day-cell.has-game { background-color: var(--color-acento); color: var(--color-blanco); font-weight: bold; }
+.day-cell.today { border: 2px solid var(--color-primario); font-weight: bold; color: var(--color-primario); background-color: #f0e4e8; }
+.day-cell.today.has-game { background-color: var(--color-acento); color: var(--color-blanco); border: 2px solid var(--color-blanco); }
+.day-cell.selected-day { background-color: var(--color-secundario); color: var(--color-blanco); font-weight: bold; border: 2px solid var(--color-secundario); }
+.day-cell.today.selected-day { border: 2px solid var(--color-primario); }
 
 /* ==========================================================================
    4. PIE DE PÁGINA (FOOTER)
    ========================================================================== */
-.main-footer {
-    background-color: var(--color-secundario); color: var(--color-blanco);
-    padding: 3rem 2rem 1.5rem;
-    border-top: 2px solid var(--color-acento); /* CAMBIO: Borde dorado */
-}
-/* (El resto de tus estilos de footer se quedan igual) */
+.main-footer { background-color: var(--color-secundario); color: var(--color-blanco); padding: 3rem 2rem 1.5rem; border-top: 2px solid var(--color-acento); }
 .footer-content { display: flex; justify-content: space-between; gap: 2.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
 .footer-about, .footer-links, .footer-social { flex: 1; min-width: 250px; }
 .main-footer h4 { font-family: var(--font-heading); color: var(--color-blanco); margin-bottom: 1rem; font-size: 1.2rem; border-bottom: 2px solid var(--color-acento); padding-bottom: 0.5rem; display: inline-flex; align-items: center; }
@@ -299,7 +198,6 @@ body {
 /* ==========================================================================
    5. BOTONES FLOTANTES (FAB)
    ========================================================================== */
-/* (Tus estilos de FAB se quedan igual) */
 .fab-container { position: fixed; bottom: 20px; left: 0; width: 100%; z-index: 999; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; pointer-events: none; }
 .fab { pointer-events: auto; background-color: var(--color-verde); color: var(--color-blanco); border-radius: 50px; padding: 12px 18px; text-decoration: none; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px; transition: transform 0.2s ease-in-out; }
 .fab:hover { transform: scale(1.05); }
@@ -308,7 +206,6 @@ body {
 /* ==========================================================================
    6. MEDIA QUERIES (RESPONSIVIDAD)
    ========================================================================== */
-/* (Tus estilos de Media Queries se quedan igual, pero he añadido un ajuste para los nuevos paddings) */
 @media (max-width: 768px) {
     body { padding-top: 0; }
     .main-header { position: static; flex-direction: column; gap: 1.5rem; }
@@ -317,7 +214,7 @@ body {
     .section-title { font-size: 2rem; }
     .new-carousel-section { margin-top: 0; padding: 0; }
     .carousel-container { border-radius: 0; }
-    .video-section, .leagues-hub-section, .facebook-section, .main-footer { padding: 2.5rem 1rem; }
+    .video-section, .leagues-hub-section, .facebook-section, .main-footer, .category-section, .tabs-section { padding: 2.5rem 1rem; }
     .hub-subtitle { font-size: 1.8rem; }
     .hub-main-title { font-size: 3rem; letter-spacing: 0.1em; }
     .hub-jaguar-logo { max-width: 200px; }
