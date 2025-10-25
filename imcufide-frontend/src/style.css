@@ -237,4 +237,46 @@ body {
     .fab-register span { display: none; }
     .fab-register, .fab-whatsapp { width: 50px; height: 50px; justify-content: center; border-radius: 50%; padding: 10px; }
     .fab-whatsapp { align-self: auto; }
+
+    .league-hero {
+        margin-top: 0; 
+        height: 35vh; 
+    }
+    .league-hero h1 {
+         font-size: 2rem; 
+    }
+
+    .breadcrumbs {
+        padding: 0.75rem 1rem; 
+    }
+    .breadcrumbs a {
+         font-size: 0.9rem; 
+    }
+
+    .tabs-nav {
+         padding: 0.3rem;
+    }
+    .tab-link {
+        font-size: 0.9rem; 
+         padding: 0.6rem 1rem; 
+
+    .info-card {
+        padding: 1rem 1.2rem;
+    }
+    .info-card-header h3 {
+         font-size: 1.1rem;
+    }
+
+    /* Ajustes para la lista de partidos */
+    .game-item {
+         padding: 1rem;
+         flex-direction: column; /* Apila la info en móvil */
+         align-items: flex-start; /* Alinea a la izquierda */
+         gap: 0.5rem;
+    }
+    .game-time {
+         text-align: left; /* Alinea a la izquierda */
+         min-width: unset; /* Quita el ancho mínimo */
+    }
+    }
 }
