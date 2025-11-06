@@ -8,10 +8,9 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         ligaFutbol: resolve(__dirname, 'liga-futbol.html'),
-        categoriaJuvenilA: resolve(__dirname, 'liga-juvenil-a.html'), // Esta ya estaba
-        // --- AÑADE ESTAS DOS LÍNEAS ---
-        ligaJuvenilB: resolve(__dirname, 'liga-juvenil-b.html'),
-        ligaInfantil: resolve(__dirname, 'liga-infantil.html'),
+        categoriaPreparatoria: resolve(__dirname, 'liga-preparatoria.html'),
+        ligaSecundaria: resolve(__dirname, 'liga-secundaria.html'),
+        ligaPrimaria: resolve(__dirname, 'liga-primaria.html'),
         // ---------------------------------
       },
     },
