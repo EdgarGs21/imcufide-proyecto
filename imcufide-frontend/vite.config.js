@@ -11,6 +11,7 @@ export default defineConfig({
         categoriaPreparatoria: resolve(__dirname, 'liga-preparatoria.html'),
         ligaSecundaria: resolve(__dirname, 'liga-secundaria.html'),
         ligaPrimaria: resolve(__dirname, 'liga-primaria.html'),
+        proximamente: resolve(__dirname, 'proximamente.html'),
         // ---------------------------------
       },
     },
