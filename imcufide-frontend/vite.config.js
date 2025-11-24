@@ -12,6 +12,8 @@ export default defineConfig({
         ligaSecundaria: resolve(__dirname, 'liga-secundaria.html'),
         ligaPrimaria: resolve(__dirname, 'liga-primaria.html'),
         proximamente: resolve(__dirname, 'proximamente.html'),
+        quienesSomos: resolve(__dirname, 'quienes-somos.html'),
+
         // ---------------------------------
       },
     },
