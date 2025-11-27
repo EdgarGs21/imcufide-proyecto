@@ -93,7 +93,7 @@ body {
 }
 /* --- 3.3 Sección HUB de Deportes (Página Principal) --- */
 .leagues-hub-section { padding: 4rem 2rem 0; background-color: var(--color-blanco); text-align: center; 
-    background-image: url('./src/assets/tu-fondo-nuevo.jpg');
+    background-image: url('./assets/fondo-ligas.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;}
