@@ -391,7 +391,7 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-/* Responsividad para la nueva página */
+/* 4.0 Responsividad para la nueva página */
 @media (max-width: 768px) {
     .about-hero h1 { font-size: 2.5rem; }
     .timeline::before { left: 20px; } /* Mover línea a la izquierda en móvil */
@@ -400,6 +400,35 @@ body {
     .timeline-content { width: 100%; margin-left: 3rem; }
     .timeline-content::before { left: -2.6rem; } /* Ajustar punto */
     .location-content { grid-template-columns: 1fr; }
+}
+
+/* --- ESTILOS DE LA GALERÍA --- */
+.gallery-grid {
+    display: grid;
+    /* Esto es la magia: crea columnas automáticas de mínimo 250px */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    gap: 15px; /* Espacio entre fotos */
+    margin-top: 20px;
+}
+
+.gallery-item {
+    overflow: hidden; /* Para que el zoom no se salga del cuadro */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px; /* Altura fija para que todas se vean parejas */
+    object-fit: cover; /* Recorta la imagen para llenar el cuadro sin deformarla */
+    display: block;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* Efecto Zoom al pasar el mouse */
+.gallery-item img:hover {
+    transform: scale(1.05);
 }
 
 /* ==========================================================================
@@ -499,4 +528,54 @@ body {
          min-width: unset; /* Quita el ancho mínimo */
     }
     }
+}
+
+
+
+/* --- ESTADO VACÍO / PRÓXIMAMENTE --- */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: #f8f9fa; /* Gris muy clarito */
+    border-radius: 15px;
+    border: 2px dashed #d1d5db; /* Borde punteado estilo "en construcción" */
+    margin: 20px 0;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+    color: #8B4513; /* Tu color café corporativo */
+    opacity: 0.8;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.empty-state p {
+    color: #666;
+    max-width: 500px;
+    margin: 0 auto 2rem auto;
+    font-size: 1.1rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: #8B4513;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #6d360f;
+    transform: translateY(-2px);
 }
